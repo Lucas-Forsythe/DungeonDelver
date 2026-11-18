@@ -145,7 +145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bfef7a0ad646040b8001c08ff484e9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bfef7a0ad646040b8001c08ff484e9, type: 3}
       propertyPath: m_LocalRotation.x
@@ -153,11 +153,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bfef7a0ad646040b8001c08ff484e9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bfef7a0ad646040b8001c08ff484e9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bfef7a0ad646040b8001c08ff484e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -165,7 +165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bfef7a0ad646040b8001c08ff484e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 33bfef7a0ad646040b8001c08ff484e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1818,7 +1818,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &648517176
 MonoBehaviour:
@@ -5532,6 +5532,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1544745296}
   - component: {fileID: 1544745297}
+  - component: {fileID: 1544745298}
   m_Layer: 0
   m_Name: NavMeshSurface
   m_TagString: Untagged
@@ -5586,6 +5587,38 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 40a774dfc6118ca4ca5993ed32a23d63, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &1544745298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544745295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: -334000983
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 192
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 1.5
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: ed4cf0fa1521e8243a2cd3b9e20dea2c, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &1548086634
 GameObject:
   m_ObjectHideFlags: 0
@@ -5598,6 +5631,7 @@ GameObject:
   - component: {fileID: 1548086635}
   - component: {fileID: 1548086638}
   - component: {fileID: 1548086637}
+  - component: {fileID: 1548086639}
   m_Layer: 3
   m_Name: CrabBoss
   m_TagString: Enemy
@@ -5654,14 +5688,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eefb7f1b480c2041bb6edd70ca8d783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CrabBoss
-  maxHealth: 300
-  detectRange: 25
-  attackRange: 3
+  maxHealth: 1000
+  detectRange: 50
+  attackRange: 10
   attackDamage: 20
   attackWindUp: 0.5
   attackCooldown: 2
-  turnSpeed: 6
+  turnSpeed: 12
   modelYawOffset: 0
+  clawPoints: []
+  clawRadius: 0.6
+  clawHitWindow: 0.35
   bossBarRoot: {fileID: 1244521363}
   bossBar: {fileID: 1959241089}
   animator: {fileID: 2090167624}
@@ -5681,7 +5718,7 @@ NavMeshAgent:
   m_AgentTypeID: -334000983
   m_Radius: 10
   m_Speed: 3.5
-  m_Acceleration: 5
+  m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 2
@@ -5692,6 +5729,33 @@ NavMeshAgent:
   m_BaseOffset: -10
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &1548086639
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548086634}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1001 &1569963229
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5863,7 +5927,7 @@ PrefabInstance:
       objectReference: {fileID: 5723502740690435190, guid: 6ee11a5ab0d4df5438c75df6a506e46a, type: 3}
     - target: {fileID: 807452917791092688, guid: 27dbe99c6c8f7b840bb96a90e9748a59, type: 3}
       propertyPath: LootChances.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 807452917791092688, guid: 27dbe99c6c8f7b840bb96a90e9748a59, type: 3}
       propertyPath: LootPrefabs.Array.size
@@ -5884,7 +5948,7 @@ PrefabInstance:
     - target: {fileID: 807452917791092688, guid: 27dbe99c6c8f7b840bb96a90e9748a59, type: 3}
       propertyPath: 'LootPrefabs.Array.data[0]'
       value: 
-      objectReference: {fileID: 8105817636599599742, guid: 9db204d12db8e9b4b903f63e22e3cd7b, type: 3}
+      objectReference: {fileID: 8105817636599599742, guid: 6a813e3a07bd7d546a2b8bde2772cb4f, type: 3}
     - target: {fileID: 807452917791092688, guid: 27dbe99c6c8f7b840bb96a90e9748a59, type: 3}
       propertyPath: 'LootPrefabs.Array.data[1]'
       value: 
@@ -6744,8 +6808,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &1909652862 stripped
 Transform:
@@ -7607,6 +7671,10 @@ PrefabInstance:
       propertyPath: sfxSource
       value: 
       objectReference: {fileID: 813531036}
+    - target: {fileID: 486003631905151963, guid: 95451dfee0837d847bb8cefb187401b2, type: 3}
+      propertyPath: BetterSword
+      value: 
+      objectReference: {fileID: 11400000, guid: 02689cf300dce9b4b869a372c0fe69b2, type: 2}
     - target: {fileID: 486003631905151963, guid: 95451dfee0837d847bb8cefb187401b2, type: 3}
       propertyPath: playerInput
       value: 

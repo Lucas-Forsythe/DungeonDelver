@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour
 
     public ItemScriptableObject Gold;
     public ItemScriptableObject Sword;
+    public ItemScriptableObject BetterSword;
     public GameObject hotBarObj;
     public GameObject inventorySlotParent;
 
@@ -663,5 +664,14 @@ public class Inventory : MonoBehaviour
         int remaining = slot.GetItemCount() - 1;
         if (remaining <= 0) slot.ClearSlot();
         else slot.SetItem(slot.GetItem(), remaining);
+    }
+
+    // Empties every inventory and hotbar slot (used on respawn)
+    public void ClearAll()
+    {
+        CancelDrag();
+
+        foreach (Slots slot in allSlots)
+            slot.ClearSlot();
     }
 }

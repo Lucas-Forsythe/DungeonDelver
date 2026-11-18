@@ -15,11 +15,18 @@ public class CrabBoss : MonoBehaviour, IDamageable
     public float detectRange = 25f;
     public float attackRange = 3f;
     public float attackDamage = 20f;
-    public float attackWindUp = 0.5f;     // delay before the hit lands
+    public float attackWindUp = 0.5f;     // delay before the claws can hit
     public float attackCooldown = 2f;
     public float turnSpeed = 6f;
     [Tooltip("Rotate this if the crab model faces sideways (try 90 or -90).")]
     public float modelYawOffset = 0f;
+
+    [Header("Claws")]
+    [Tooltip("Empty objects parented to the claw bones. Leave empty to use a plain range check instead.")]
+    public Transform[] clawPoints;
+    public float clawRadius = 0.6f;
+    [Tooltip("How long the claws can hit after the wind-up.")]
+    public float clawHitWindow = 0.35f;
 
     [Header("UI (optional)")]
     public GameObject bossBarRoot;        // parent object of the bar, starts inactive
@@ -39,20 +46,75 @@ public class CrabBoss : MonoBehaviour, IDamageable
     private bool aggro;
     private float nextAttackTime;
     private bool attacking;
+    private Vector3 startPosition;
+    private Quaternion startRotation;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
 
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+
+        // Snap onto the NavMesh if the crab starts slightly off it
+        if (!agent.isOnNavMesh)
+        {
+            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+                agent.Warp(hit.position);
+            else
+                Debug.LogWarning("CrabBoss: no NavMesh within 10 units. Bake the NavMesh under the boss or move it closer to the floor.", this);
+        }
+
         CurrentHealth = maxHealth;
         if (bossBarRoot != null) bossBarRoot.SetActive(false);
         UpdateBar();
     }
 
+    private void OnEnable()
+    {
+        PlayerHealth.OnPlayerRespawned += ResetBoss;
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnPlayerRespawned -= ResetBoss;
+    }
+
+    // Called when the player respawns: back to full health, back to the start, fight over
+    private void ResetBoss()
+    {
+        if (IsDead) return;   // a defeated boss stays defeated
+
+        StopAllCoroutines();
+        attacking = false;
+        aggro = false;
+        nextAttackTime = 0f;
+
+        CurrentHealth = maxHealth;
+        UpdateBar();
+        if (bossBarRoot != null) bossBarRoot.SetActive(false);
+
+        if (agent != null && agent.enabled)
+        {
+            agent.Warp(startPosition);
+            transform.rotation = startRotation;
+            if (agent.isOnNavMesh)
+            {
+                agent.ResetPath();
+                agent.isStopped = true;
+                agent.velocity = Vector3.zero;
+            }
+        }
+
+        ResetTrigger(attackTrigger);
+        SetFloat(speedParam, 0f);
+    }
+
     private void Update()
     {
         if (IsDead) return;
+        if (!agent.enabled || !agent.isOnNavMesh) return;
 
         var playerHealth = PlayerHealth.Instance;
         if (playerHealth == null || playerHealth.IsDead)
@@ -99,15 +161,47 @@ public class CrabBoss : MonoBehaviour, IDamageable
 
         yield return new WaitForSeconds(attackWindUp);
 
-        if (!IsDead && player != null && !player.IsDead)
+        if (clawPoints != null && clawPoints.Length > 0)
         {
+            // Claws can hit at any moment during the window, but only once per attack
+            float t = 0f;
+            bool hit = false;
+            while (t < clawHitWindow && !IsDead && !hit)
+            {
+                hit = TryClawHit(player);
+                t += Time.deltaTime;
+                yield return null;
+            }
+        }
+        else if (!IsDead && player != null && !player.IsDead)
+        {
+            // Fallback: plain range check
             Vector3 flat = player.transform.position - transform.position;
             flat.y = 0f;
-            if (flat.magnitude <= attackRange + 1f)       // small grace so a step back doesn't dodge it
-                player.Attack(attackDamage);
+            if (flat.magnitude <= attackRange + 1f) player.Attack(attackDamage);
         }
 
         attacking = false;
+    }
+
+    private bool TryClawHit(PlayerHealth player)
+    {
+        if (player == null || player.IsDead) return false;
+
+        foreach (Transform claw in clawPoints)
+        {
+            if (claw == null) continue;
+
+            foreach (Collider col in Physics.OverlapSphere(claw.position, clawRadius))
+            {
+                if (col.GetComponentInParent<PlayerHealth>() == player)
+                {
+                    player.Attack(attackDamage);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void FacePlayer(Vector3 toPlayer)
@@ -131,6 +225,7 @@ public class CrabBoss : MonoBehaviour, IDamageable
 
     private void Die()
     {
+        StopAllCoroutines();
         StopMoving();
         agent.enabled = false;
 
@@ -161,6 +256,15 @@ public class CrabBoss : MonoBehaviour, IDamageable
         bossBar.value = CurrentHealth;
     }
 
+    // Shows the claw hit spheres in the Scene view when the boss is selected
+    private void OnDrawGizmosSelected()
+    {
+        if (clawPoints == null) return;
+        Gizmos.color = Color.red;
+        foreach (Transform claw in clawPoints)
+            if (claw != null) Gizmos.DrawWireSphere(claw.position, clawRadius);
+    }
+
     // Animator helpers that stay quiet if the parameter doesn't exist yet
     private void SetFloat(string param, float value)
     {
@@ -170,6 +274,11 @@ public class CrabBoss : MonoBehaviour, IDamageable
     private void SetTrigger(string param)
     {
         if (HasParam(param, AnimatorControllerParameterType.Trigger)) animator.SetTrigger(param);
+    }
+
+    private void ResetTrigger(string param)
+    {
+        if (HasParam(param, AnimatorControllerParameterType.Trigger)) animator.ResetTrigger(param);
     }
 
     private bool HasParam(string param, AnimatorControllerParameterType type)

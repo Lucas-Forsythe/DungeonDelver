@@ -35,6 +35,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private Vector3 startPosition;
     private Quaternion startRotation;
 
+    public static event Action OnPlayerRespawned;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -150,6 +152,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         CurrentHealth = MaxHealth;
         UpdateUI();
 
+        if (Inventory.Instance != null) Inventory.Instance.ClearAll();
+        OnPlayerRespawned?.Invoke();
         onRespawn?.Invoke();
     }
 
