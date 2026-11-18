@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4482512248810079754}
   - component: {fileID: 5052943974338046964}
   - component: {fileID: 8274271876085338088}
-  - component: {fileID: 3986941587906859950}
   - component: {fileID: 6523798206652528135}
+  - component: {fileID: 807452917791092688}
   m_Layer: 3
   m_Name: TrainingDummy
   m_TagString: Untagged
@@ -84,34 +84,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
---- !u!114 &3986941587906859950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6237606932621504795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb53fa6c1243ad044a29bb74b90dfa6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  MaxHealth: 10
-  FlashColor: {r: 1, g: 0, b: 0, a: 1}
-  FlashDuration: 0.15
-  EmissionIntensity: 2
-  DeathRotation: 90
-  TimeTilModelDestruction: 1
-  DeathParticles: {fileID: 5723502740690435190, guid: 6ee11a5ab0d4df5438c75df6a506e46a, type: 3}
-  CurrentPointIndex: 0
-  CurrentTarget: {x: 0, y: 0, z: 0}
-  PositionThreshold: 0.5
-  PatrolPoints: []
-  IdleTime: 5
-  AttackDistance: 5
-  VisionDistance: 10
-  MinChasingHealth: 30
-  state: 0
 --- !u!195 &6523798206652528135
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -134,6 +106,44 @@ NavMeshAgent:
   m_BaseOffset: 1.1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &807452917791092688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6237606932621504795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb53fa6c1243ad044a29bb74b90dfa6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  LootPrefabs:
+  - {fileID: 5247222705732696610, guid: 764f1ee0eaeb84f44994f3f121010cdc, type: 3}
+  LootChances:
+  - 25
+  LootSpawnOffset: {x: 0, y: 0.25, z: 0}
+  MaxHealth: 100
+  FlashColor: {r: 1, g: 0, b: 0, a: 1}
+  FlashDuration: 0.15
+  EmissionIntensity: 2
+  DeathRotation: 90
+  TimeTilModelDestruction: 1
+  DeathParticles: {fileID: 0}
+  CurrentPointIndex: 0
+  CurrentTarget: {x: 0, y: 0, z: 0}
+  PositionThreshold: 0.5
+  PatrolPoints: []
+  IdleTime: 5
+  AttackDistance: 5
+  VisionDistance: 10
+  MinChasingHealth: 80
+  FleeChancePercent: 10
+  FleeDuration: 5
+  FleeDistance: 15
+  FleeSpeedMultiplier: 1.3
+  FleeRepathInterval: 0.5
+  state: 0
 --- !u!1001 &8083078482440560721
 PrefabInstance:
   m_ObjectHideFlags: 0

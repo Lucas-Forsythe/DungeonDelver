@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b3065611080d9b4a9981acbd356e7db, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: Assembly-CSharp::ItemScriptableObject
+  itemName: Sword
+  itemIcon: {fileID: 21300000, guid: 3e42c97ec89a01e419aaa40609041da7, type: 3}
+  maxStackSize: 1
+  itemPrefab: {fileID: 8105817636599599742, guid: 9db204d12db8e9b4b903f63e22e3cd7b, type: 3}
+  heldItem: {fileID: 8390926279193869347, guid: d65df5226b802ff418a6854b876ec160, type: 3}
+  itemType: 1
+  heldPositionOffset: {x: 0.1, y: 0, z: -0.08}
+  heldRotationOffset: {x: 0, y: 180, z: 0}
+  damage: 40
+  attackRange: 0.5
+  windUpTime: 0.3
+  attackCooldown: 1
+  attackState: Sword_Attack
+  idleState: Sword_Idle
+  hitWindowStart: 0.3
+  hitWindowEnd: 0.6
+  healAmount: 25
